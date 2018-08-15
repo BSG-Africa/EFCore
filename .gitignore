@@ -1,0 +1,6 @@
+src/Bsg.EfCore.Tests/obj/
+src/Bsg.EfCore.Tests/bin/
+src/Bsg.EfCore/obj/
+src/Bsg.EfCore/bin/
+src/.vs/
+*.user

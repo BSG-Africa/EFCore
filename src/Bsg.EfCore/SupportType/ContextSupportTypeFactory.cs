@@ -28,6 +28,7 @@ namespace Bsg.EfCore.SupportType
             var supportTypes = new ContextSupportTypeDto
             {
                 ConfigTypes = this.GetConfigTypes<TContext>(allTypesInContextAssembly, entityInterfaceForContextType),
+                WrapperEntityTypes = this.GetWrapperEntityTypes(allTypesInContextAssembly, entityInterfaceForContextType)
             };
 
             return supportTypes;
@@ -61,7 +62,18 @@ namespace Bsg.EfCore.SupportType
 
             return configSupportTypes;
         }
-        
+
+        private IList<Type> GetWrapperEntityTypes(IList<Type> typesToCheck, Type entityInterfaceForContextType)
+        {
+            var wrapperType = typeof(IBulkWrapperEntity);
+
+            return typesToCheck
+                .Where(t =>
+                    wrapperType.IsAssignableFrom(t) &&
+                    entityInterfaceForContextType.IsAssignableFrom(t))
+                .ToList();
+        }
+
         private Type GetEntityInterfaceForContextType<TContext>()
             where TContext : IDbContext
         {

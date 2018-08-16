@@ -69,6 +69,11 @@ namespace Bsg.EfCore.Context
                 var entityConfigurationInstance = Activator.CreateInstance(configType.EntityConfigurationType, true);
                 configType.GenerifiedModelApplyMethod.Invoke(modelBuilder, new[] { entityConfigurationInstance });
             }
+
+            foreach (var wrapperType in this.contextSupport.WrapperEntityTypes)
+            {
+                modelBuilder.Ignore(wrapperType);
+            }
         }
 
         protected virtual void AddConventions(ModelBuilder modelBuilder)

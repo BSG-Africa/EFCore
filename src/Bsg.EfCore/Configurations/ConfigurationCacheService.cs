@@ -1,6 +1,5 @@
 ﻿namespace Bsg.EfCore.Configurations
 {
-    using System;
     using System.IO;
     using Context;
     using Microsoft.Extensions.Configuration;

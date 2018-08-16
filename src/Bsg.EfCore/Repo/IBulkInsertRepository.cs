@@ -1,7 +1,6 @@
 namespace Bsg.EfCore.Repo
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Context;
     using Domain;
     using Transactions;
@@ -22,10 +21,6 @@ namespace Bsg.EfCore.Repo
         int BulkAdd(IEnumerable<TEntity> items, IContextTransaction contextTransaction);
 
         int BulkAdd(IEnumerable<TEntity> items, int bufferSize, IContextTransaction contextTransaction);
-
-        void BulkSelectAndAdd(IQueryable<TEntity> query);
-
-        void BulkSelectAndAdd(IQueryable<TEntity> query, IContextTransaction contextTransaction);
 
         IBulkInserter<TEntity> BuildInserter(int bufferSize, IContextTransaction contextTransaction);
     }

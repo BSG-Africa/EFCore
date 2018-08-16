@@ -12,43 +12,6 @@
     public class RepoTransactionTests : TestBase
     {
         [Test]
-        public void EnsureBulkDeleteDeletesWhenUsingExternalTransaction()
-        {
-            // Arrange
-            var requestContainer = this.BuildRequestContainer();
-            var gammaPrimaryRepo = requestContainer.GetService<IPrimaryRepository<Gamma>>();
-            var contextSession = requestContainer.GetService<IDbContextSession<PrimaryContext>>();
-
-            var gammas = new List<Gamma>();
-            var noOfRecordsToInsert = 1000;
-
-            for (var idx = 1; idx <= noOfRecordsToInsert; idx++)
-            {
-                gammas.Add(new Gamma
-                {
-                    Category = "Some Category",
-                    Cost = 1,
-                    Price = 1
-                });
-            }
-
-            gammaPrimaryRepo.BulkAdd(gammas);
-
-            // Assume
-            Assert.That(gammaPrimaryRepo.CountAll(), Is.GreaterThanOrEqualTo(noOfRecordsToInsert));
-
-            // Action
-            using (var transaction = contextSession.StartNewTransaction())
-            {
-                gammaPrimaryRepo.BulkDelete(g => true, transaction);
-                transaction.Commit();
-            }
-
-            // Assert
-            Assert.That(gammaPrimaryRepo.CountAll(), Is.EqualTo(0));
-        }
-
-        [Test]
         public void EnsureBulkAddInsertsWhenUsingExternalTransaction()
         {
             // Arrange
@@ -172,43 +135,6 @@
 
             // Assert
             Assert.That(hasCurrentTransaction, Is.False);
-        }
-
-        [Test]
-        public void EnsureBulkDeleteDeletesWhenUsingExistingTransactionWithoutPassingItIntoRepo()
-        {
-            // Arrange
-            var requestContainer = this.BuildRequestContainer();
-            var gammaPrimaryRepo = requestContainer.GetService<IPrimaryRepository<Gamma>>();
-            var contextSession = requestContainer.GetService<IDbContextSession<PrimaryContext>>();
-
-            var gammas = new List<Gamma>();
-            var noOfRecordsToInsert = 1000;
-
-            for (var idx = 1; idx <= noOfRecordsToInsert; idx++)
-            {
-                gammas.Add(new Gamma
-                {
-                    Category = "Some Category",
-                    Cost = 1,
-                    Price = 1
-                });
-            }
-
-            gammaPrimaryRepo.BulkAdd(gammas);
-
-            // Assume
-            Assert.That(gammaPrimaryRepo.CountAll(), Is.GreaterThanOrEqualTo(noOfRecordsToInsert));
-
-            // Action
-            using (var transaction = contextSession.StartNewTransaction())
-            {
-                gammaPrimaryRepo.BulkDelete(g => true);
-                transaction.Commit();
-            }
-
-            // Assert
-            Assert.That(gammaPrimaryRepo.CountAll(), Is.EqualTo(0));
         }
     }
 }

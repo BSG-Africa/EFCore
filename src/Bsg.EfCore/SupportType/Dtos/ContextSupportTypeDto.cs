@@ -7,12 +7,9 @@ namespace Bsg.EfCore.SupportType.Dtos
     {
         public ContextSupportTypeDto()
         {
-            this.WrapperEntityTypes = new List<Type>();
             this.ConfigTypes = new List<ConfigSupportDto>();
         }
 
         public IList<ConfigSupportDto> ConfigTypes { get; set; }
-
-        public IList<Type> WrapperEntityTypes { get; set; }
     }
 }

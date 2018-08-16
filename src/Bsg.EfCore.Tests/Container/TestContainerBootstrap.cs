@@ -27,7 +27,9 @@
 
             // Open Generics
             builder.RegisterGeneric(typeof(GenericRepository<,>)).As(typeof(IGenericRepository<,>));
+            builder.RegisterGeneric(typeof(SimpleGenericRepository<,>)).As(typeof(ISimpleGenericRepository<,>));
             builder.RegisterGeneric(typeof(PrimaryRepository<>)).As(typeof(IPrimaryRepository<>));
+            builder.RegisterGeneric(typeof(SimplePrimaryRepository<>)).As(typeof(ISimplePrimaryRepository<>));
             builder.RegisterGeneric(typeof(GenericTransactionService<>)).As(typeof(IGenericTransactionService<>));
 
             // register individual singleton per scope services 

@@ -2,9 +2,6 @@ namespace Bsg.EfCore.Repo
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Text;
     using Context;
     using Domain;
     using Mapping;
@@ -80,38 +77,6 @@ namespace Bsg.EfCore.Repo
                 true);
         }
 
-        public void BulkSelectAndAdd(IQueryable<TEntity> query)
-        {
-            this.ExecuteSelectAndAdd(query, null);
-        }
-
-        public void BulkSelectAndAdd(IQueryable<TEntity> query, IContextTransaction contextTransaction)
-        {
-            this.ExecuteSelectAndAdd(query, contextTransaction);
-        }
-
-        private void ExecuteSelectAndAdd(IQueryable<TEntity> query, IContextTransaction contextTransaction)
-        {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            var mappings = this.GetMapping();
-
-            var selectBindings = this.ExtractSelectBindings(query);
-            var selectQuery = this.BuildSelect(query);
-            var selectParameters = selectQuery.Item2;
-            var tableName = mappings.FullyQualifiedTableName;
-            var orderedColumns = this.MapPropertiesToColumns(selectBindings, mappings);
-            var requiredSelectLines = this.FixAdditionalSelectedColumn(selectQuery.Item1, selectBindings.Count);
-            var actualSelectQuery = string.Join(Environment.NewLine, requiredSelectLines);
-
-            var insertQuery = $"INSERT INTO {tableName} ({orderedColumns}) {actualSelectQuery}";
-
-            this.Execute(insertQuery, selectParameters, contextTransaction);
-        }
-
         private int ExecuteAdd(IEnumerable<TEntity> items, int bufferSize, IContextTransaction contextTransaction)
         {
             if (contextTransaction == null)
@@ -159,30 +124,6 @@ namespace Bsg.EfCore.Repo
                 return inserter.InsertedCount();
             }
         }
-
-        private string MapPropertiesToColumns(
-            IReadOnlyList<MemberBinding> selectBindings,
-            TableMapping<TEntity, TContext> mappings)
-        {
-            var columnNames = new StringBuilder();
-
-            for (var i = 0; i < selectBindings.Count; i++)
-            {
-                var binding = selectBindings[i];
-                var propertyName = binding.Member.Name;
-                var columnName = mappings.ColumnMappings[propertyName];
-
-                columnNames.Append($"[{columnName}]");
-
-                if (i != selectBindings.Count - 1)
-                {
-                    columnNames.AppendLine(", ");
-                }
-            }
-
-            return columnNames.ToString();
-        }
-
         #endregion
     }
 }

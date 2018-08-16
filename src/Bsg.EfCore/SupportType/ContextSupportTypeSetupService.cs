@@ -49,7 +49,7 @@ namespace Bsg.EfCore.SupportType
                     e => this.contextSupportTypeCacheService.StoreTypes<IDbContext>(supportingTypes),
                     new[] { contextType },
                     this.contextSupportTypeCacheService,
-                    new[] { supportingTypes });
+                    new object[] { supportingTypes });
             }
         }
     }
